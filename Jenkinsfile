@@ -28,7 +28,18 @@ pipeline{
             }
             
         }
+
+        stage('Test'){
+            steps{
+                echo 'In Testing Stage'
+                sh '''
+                    npm test
+                '''
+            }
+        }
     }
+
+
 
     post{
         success{
