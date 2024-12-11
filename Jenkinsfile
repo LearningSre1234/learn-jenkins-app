@@ -53,5 +53,9 @@ pipeline{
         success{
             archiveArtifacts artifacts: '**'
         }
+
+        always{
+            junit 'test-results/junit.xml'
+        }
     }
 }
