@@ -15,17 +15,18 @@ pipeline{
                     image 'node:18-alpine'
                     reuseNode true
                 }
-                steps{
-                    echo 'In Building Block'
-                    sh '''
-                        ls -la
-                        npm --version
-                        node --version
-                        npm ci
-                        npm run build
-                    '''
-                }
             }
+            steps{
+                echo 'In Building Block'
+                sh '''
+                    ls -la
+                    npm --version
+                    node --version
+                    npm ci
+                    npm run build
+                '''
+            }
+            
         }
     }
 }
