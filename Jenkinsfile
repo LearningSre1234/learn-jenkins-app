@@ -3,11 +3,11 @@ pipeline{
     agent any
 
     stages{
-        stage (cleanUp){
-            steps{
-                cleanWs()
-            }
-        }
+        // stage (cleanUp){
+        //     steps{
+        //         cleanWs()
+        //     }
+        // }
 
         stage('Build'){
             agent{
