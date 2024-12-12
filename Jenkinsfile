@@ -118,7 +118,7 @@ pipeline{
             }
 
             environment{
-                    CI_ENVIRONMENT_URL = $env.Stg_Var
+                    CI_ENVIRONMENT_URL = "${env.Stg_Var}"
                 }
             
             steps{
