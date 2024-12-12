@@ -51,6 +51,12 @@ pipeline{
                             npm test
                         '''
                     }
+
+                    post{
+                        always {
+                            junit 'jest-results/junit.xml'
+                        }
+                    }
                 }
 
                 stage('E2E'){
@@ -68,6 +74,12 @@ pipeline{
                             sleep 10
                             npx playwright test --reporter=html
                         '''
+                    }
+
+                    post{
+                        always{
+                            publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'PlayWright HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+                        }
                     }
                 }
             }
@@ -104,25 +116,18 @@ pipeline{
             
             steps{
                 sh '''
-                    node_modules/.bin/serve --version
+                    // node_modules/.bin/serve --version
+                    npx
                 '''
+            }
+
+            post{
+                always{
+
+                    publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'PlayWright HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+                }
             }
         }
         
-    }
-
-
-
-    post{
-        success{
-            archiveArtifacts artifacts: '**'
-        }
-
-        always{
-            echo '----------------------------------------------------------------------------'
-            junit 'jest-results/junit.xml'
-            echo '----------------------------------------------------------------------------'
-            publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'PlayWright HTML Report', reportTitles: '', useWrapperFileDirectly: true])
-        }
     }
 }
