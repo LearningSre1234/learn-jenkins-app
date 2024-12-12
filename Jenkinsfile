@@ -106,6 +106,11 @@ pipeline{
             }
         }
 
+        stage('Approval'){
+            steps{
+                input message: '\'Ready aaa Bro\'', ok: 'Ready !'
+            }
+        }
 
         stage('Prod -E2E'){
             agent{
