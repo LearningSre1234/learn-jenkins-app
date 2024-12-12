@@ -12,7 +12,6 @@ function App() {
           target="_blank"
           rel="noopener noreferrer"
         >Learn from me
-          Learn From me
         </a>
       </header>
       <p>
