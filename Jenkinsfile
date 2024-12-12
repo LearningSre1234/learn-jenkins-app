@@ -123,8 +123,8 @@ pipeline{
 
             post{
                 always{
-
                     publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'Pro-Test.html', reportName: 'PlayWright HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+                    cleanWs()
                 }
             }
         }
