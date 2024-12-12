@@ -94,20 +94,20 @@ pipeline{
         }
 
 
-    stage('Prod -E2E'){
-        agent{
-            docker {
-                image : 'mcr.microsoft.com/playwright:v1.39.0-jammy'
-                reuseNode true
+        stage('Prod -E2E'){
+            agent{
+                docker {
+                    image : 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+                    reuseNode true
+                }
+            }
+            
+            steps{
+                sh '''
+                    node_modules/.bin/serve --version
+                '''
             }
         }
-        
-        steps{
-            sh '''
-                serve --version
-            '''
-        }
-    }
         
     }
 
