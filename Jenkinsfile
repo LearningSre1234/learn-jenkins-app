@@ -118,7 +118,7 @@ pipeline{
             steps{
                 sh '''
                     // node_modules/.bin/serve --version
-                    npx
+                    npx playwright test --reporter=html
                 '''
             }
 
