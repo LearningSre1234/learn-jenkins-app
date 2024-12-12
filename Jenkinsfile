@@ -2,6 +2,10 @@ pipeline{
 
     agent any
 
+    environment{
+        NETLIFY_SITE_ID = '76986d73-25c4-45a6-89a6-f076073afa3e'
+    }
+
     stages{
         // stage (cleanUp){
         //     steps{
