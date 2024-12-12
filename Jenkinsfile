@@ -103,7 +103,7 @@ pipeline{
                 '''
 
                 script{
-                    env.Stg_Var = sh(script: 'node_modules/.bin/node-jq -r '.deploy_url' Stg-Deploy.json', returnStdout: true)
+                    env.Stg_Var = sh(script: 'node_modules/.bin/node-jq -r ".deploy_url" Stg-Deploy.json', returnStdout: true)
                 }
             }
         }
@@ -118,7 +118,7 @@ pipeline{
             }
 
             environment{
-                    CI_ENVIRONMENT_URL = $Stg_Var
+                    CI_ENVIRONMENT_URL = $env.Stg_Var
                 }
             
             steps{
