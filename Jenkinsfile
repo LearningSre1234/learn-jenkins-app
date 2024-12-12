@@ -4,7 +4,7 @@ pipeline{
 
     environment{
         NETLIFY_SITE_ID = '76986d73-25c4-45a6-89a6-f076073afa3e'
-        NETLIFY_AUTH_TOKEN = credentials('Jenkins-Project-2[Netlify Token]')
+        NETLIFY_AUTH_TOKEN = credentials('Netlify [Jenkins-APP]')
     }
 
     stages{
