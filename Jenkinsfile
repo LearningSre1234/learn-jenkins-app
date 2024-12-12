@@ -77,6 +77,7 @@ pipeline{
             echo '----------------------------------------------------------------------------'
             junit 'jest-results/junit.xml'
             echo '----------------------------------------------------------------------------'
+            publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'PlayWright HTML Report', reportTitles: '', useWrapperFileDirectly: true])
         }
     }
 }
