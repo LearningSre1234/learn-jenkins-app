@@ -5,7 +5,6 @@ pipeline{
     environment{
         NETLIFY_SITE_ID = '76986d73-25c4-45a6-89a6-f076073afa3e'
         NETLIFY_AUTH_TOKEN = credentials('Netlify [Jenkins-APP]')
-        CI_ENVIRONMENT_URL = 'https://jocular-cat-1427f7.netlify.app'
     }
 
     stages{
@@ -67,6 +66,7 @@ pipeline{
                             reuseNode true
                         }
                     }
+                    
 
                     steps{
                         sh '''
@@ -136,6 +136,10 @@ pipeline{
                         image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
                         reuseNode true
                     }
+                }
+
+            environment{
+                         CI_ENVIRONMENT_URL = 'https://jocular-cat-1427f7.netlify.app/'
                 }
             
             steps{
