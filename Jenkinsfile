@@ -100,8 +100,38 @@ pipeline{
                     node_modules/.bin/netlify --version
                     node_modules/.bin/netlify status
                     node_modules/.bin/netlify deploy --dir=build --json >> Stg-Deploy.json
-                    node_modules/.bin/node-jq -r '.deploy_url' Stg-Deploy.json
                 '''
+
+                script{
+                    env.Stg_Var = sh(script: 'node_modules/.bin/node-jq -r '.deploy_url' Stg-Deploy.json', returnStdout: true)
+                }
+            }
+        }
+
+
+        stage('Stg -E2E'){
+            agent{
+                docker{
+                    image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+                    reuseNode true
+                }
+            }
+
+            environment{
+                    CI_ENVIRONMENT_URL = $Stg_Var
+                }
+            
+            steps{
+                sh '''
+                    npx playwright test --reporter=html
+                '''
+            }
+
+            post{
+                always{
+                    publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'Stg-Test.html', reportName: 'PlayWright STG HTML Prod Report', reportTitles: '', useWrapperFileDirectly: true])
+                    // cleanWs()
+                }
             }
         }
 
@@ -110,7 +140,6 @@ pipeline{
                 input message: '\'Ready aaa Bro\'', ok: 'Ready !'
             }
         }
-
 
         stage('Prod Deploy'){
             agent{
