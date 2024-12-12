@@ -99,7 +99,7 @@ pipeline{
                     npm install netlify-cli node-jq
                     node_modules/.bin/netlify --version
                     node_modules/.bin/netlify status
-                    node_modules/.bin/netlify deploy --dir=build --json >> Stg-Deploy.json
+                    node_modules/.bin/netlify deploy --dir=build --json > Stg-Deploy.json
                 '''
 
                 script{
