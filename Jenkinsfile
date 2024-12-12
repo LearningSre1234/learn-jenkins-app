@@ -86,9 +86,32 @@ pipeline{
             }
         }
 
+        stage('Stg-Deploy'){
+            agent{
+                docker{
+                    image 'node:18-alpine'
+                    reuseNode true
+                }
+            }
+
+            steps{
+                sh '''
+                    npm install netlify-cli
+                    node_modules/.bin/netlify --version
+                    node_modules/.bin/netlify status
+                    node_modules/.bin/netlify deploy --dir = build
+                '''
+            }
+        }
+
+        stage('Approval'){
+            steps{
+                input message: '\'Ready aaa Bro\'', ok: 'Ready !'
+            }
+        }
 
 
-        stage('Deploy'){
+        stage('Prod Deploy'){
             agent{
                 docker {
                     image 'node:18-alpine'
@@ -106,11 +129,6 @@ pipeline{
             }
         }
 
-        stage('Approval'){
-            steps{
-                input message: '\'Ready aaa Bro\'', ok: 'Ready !'
-            }
-        }
 
         stage('Prod -E2E'){
             agent{
