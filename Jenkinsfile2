@@ -1,0 +1,126 @@
+pipeline{
+
+    agent any 
+
+    stages{
+        
+        // Environment Variables
+        environment {
+            NETLIFY_SITE_ID = '76986d73-25c4-45a6-89a6-f076073afa3e'
+            NETLIFY_AUTH_TOKEN = credentials('Netlify [Jenkins-APP]')
+        }
+
+
+        stage('Build'){
+            agent{
+                docker {
+                    image : 'node:18-alpine'
+                    reuseNode true
+                }
+            }
+
+            steps{
+                echo 'In Building Block.'
+                sh '''
+                    pwd
+                    ls -la
+                    npm --version
+                    node --version
+                    npm ci
+                    npm run build
+                '''
+            }
+        }
+
+        stage('Test'){
+
+            parallel{
+                stage('JTest'){
+                    agent{
+                        docker{
+                            image 'node:18-alpine'
+                            reuseNode true
+                        }
+                    }
+
+                    steps{
+                        echo 'In JUnit Testing Stage.'
+                        sh '''
+                            npm test
+                        '''
+                    }
+
+                    post{
+                        always{
+                            junit 'jest-results/junit.xml'
+                        }
+                    }
+                }
+
+
+
+                stage('E2E-Test'){
+                    agent{
+                        docker{
+                            image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+                        }
+                    }
+
+                    steps{
+                        sh '''
+                            npm install server
+                            node_modules/.bin/server --version
+                            node_modules/.nin/server -s build &
+                            sleep 10
+                            npx playwright test --reporter=html
+                        '''
+                    }
+                }
+
+                post{
+                    always {
+                        publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: 'playwright-report', reportFiles: 'Local.html', reportName: 'PlayWright Local HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+                    }
+                }
+            }
+        }
+
+        stage('Approval'){
+            steps{
+                input message: '\'Ready aaa Bro\'', ok: 'Ready !'
+            }
+        }
+
+
+        stage('Stg-Deploy'){
+            agent{
+                docker{
+                    image 'node:18-alpine'
+                    reuseNode true
+                }
+            }
+
+            steps{
+                echo 'In Stg Deploy'
+                sh '''
+                    npm install netlify-cli
+                    node_modules/.bin/netlify --version
+                    node_modules/.bin/netlify status
+                    node_modules/.bin/netlify deploy --dir=build --json >> Stg-Out.json
+                '''
+            }
+        }
+
+        stage('Approval2'){
+            steps{
+                input message: '\'Ready aaa Bro\'', ok: 'Ready !'
+            }
+        }
+
+        stage('Prod-Deploy'){
+            
+        }
+    }
+
+
+}
